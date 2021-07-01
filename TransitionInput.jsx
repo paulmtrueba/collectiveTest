@@ -47,6 +47,7 @@ class TransitionInput extends Component {
       const {
         transactionInfo,
       } = this.store;
+
       let newValue = transactionInfo[name][index - 1];
       if (!index) {
         newValue = transactionInfo[name]
@@ -66,6 +67,7 @@ class TransitionInput extends Component {
       } = this.props;
       const { transactionInfo } = this.store;
       const { oldValue } = this.state;
+
       if (index) {
         transactionInfo[name][index - 1] = oldValue;
       } else {
@@ -88,6 +90,7 @@ class TransitionInput extends Component {
         updateClientInfo,
         updateTransactionInfo,
       } = this.store;
+
       if (clientInfo) {
         if (namesArray.includes(name)) {
           updateClientInfo(name);
@@ -131,11 +134,14 @@ class TransitionInput extends Component {
     };
 
     setHoverTrue = () => {
-        if (this.props.clientInfo || !this.store.transactionInfo.approved) {
-            this.setState({
-                hover: true
-            });
-        }
+      const { clientInfo } = this.props;
+      const { transactionInfo } = this.store;
+
+      if (clientInfo || !transactionInfo.approved) {
+        this.setState({
+          hover: true
+        });
+      }
     };
 
     handleInputChange = e => {
