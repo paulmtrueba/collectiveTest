@@ -39,6 +39,42 @@ class TransitionInput extends Component {
       };
     }
 
+    cancelEdit = () => {
+      const {
+        index,
+        name,
+      } = this.props;
+      const { transactionInfo } = this.store;
+      const { oldValue } = this.state;
+
+      if (index) {
+        transactionInfo[name][index - 1] = oldValue;
+      } else {
+        transactionInfo[name] = oldValue;
+      }
+      this.setState({
+        edit: false,
+      });
+    };
+
+    convertToBoolean = (e) => {
+      const { name } = this.props;
+      const { transactionInfo } = this.store;
+      const { value } = e.target;
+
+      let returnValue = false;
+
+      if (value === 'Yes') {
+        returnValue = true;
+      }
+
+      if (value === 'Select an option') {
+        returnValue = null;
+      }
+
+      transactionInfo[name] = returnValue;
+    };
+
     enterEditMode = () => {
       const {
         index,
@@ -60,23 +96,91 @@ class TransitionInput extends Component {
       }
     };
 
-    cancelEdit = () => {
+    handleAddressChanged = (address, newInfoHashString) => {
       const {
+        clientInfo,
         index,
         name,
       } = this.props;
-      const { transactionInfo } = this.store;
-      const { oldValue } = this.state;
+      const { transactionInfo: { approved } } = this.store;
 
-      if (index) {
-        transactionInfo[name][index - 1] = oldValue;
-      } else {
-        transactionInfo[name] = oldValue;
+      if (!approved) {
+        if (index) {
+          this.store[newInfoHashString][name][index - 1] = address;
+        } else {
+          this.store[newInfoHashString][name] = address;
+        }
       }
-      this.setState({
-        edit: false,
-      });
     };
+
+    handleAddressSelected = (address) => {
+      const {
+        handleParsedBusinessAddress,
+        handleParsedHomeAddress,
+      } = this.store;
+      geocodeByAddress(address)
+      .then((results) => {
+        const { name } = this.props;
+
+        if (name === 'business_address') {
+          handleParsedBusinessAddress(results[0]);
+          this.store.transitionClientInfo.updateBusinessAddress = true;
+        } else if (name === 'home_address') {
+          handleParsedHomeAddress(results[0]);
+          this.store.transitionClientInfo.updateHomeAddress = true;
+        }
+      })
+      .catch((error) => console.error('Error', error));
+    };
+
+    handleInputChange = (e, newInfoHashString) => {
+      const {
+        clientInfo,
+        index,
+        name,
+      } = this.props;
+      const { transactionInfo: { approved } } = this.store;
+      const { value } = e.target;
+
+      if (!approved) {
+        if (index) {
+          this.store[newInfoHashString][name][index - 1] = value;
+        } else {
+          this.store[newInfoHashString][name] = value;
+        }
+      }
+    };
+
+    handleSetSelectValue = (newInfoHashString) => {
+      const {
+        clientInfo,
+        name,
+        value,
+      } = this.props;
+
+      if (value) return value;
+      switch(this.store[newInfoHashString][name]) {
+        case 'true':
+          return 'Yes';
+        case 'false':
+          return 'No';
+        default:
+          return 'Select an option';
+      }
+    }
+
+    handleSetSpanValue = (newInfoHashString) => {
+      const {
+        boolean,
+        dollar,
+        index,
+        name,
+      } = this.props;
+
+      if (boolean) return this.handleSetSelectValue(newInfoHashString);
+      if (index) return this.store[newInfoHashString][name][index - 1];
+      return `${dollar ? '$' : ''}${this.store[newInfoHashString][name]}`;
+    }
 
     saveEdit = (removeBtn) => {
       const {
@@ -116,23 +220,6 @@ class TransitionInput extends Component {
       }
     };
 
-    convertToBoolean = (e) => {
-      const { name } = this.props;
-      const { transactionInfo } = this.store;
-      const { value } = e.target;
-
-      let returnValue = false;
-      if (value === 'Yes') {
-        returnValue = true;
-      }
-
-      if (value === 'Select an option') {
-        returnValue = null;
-      }
-
-      transactionInfo[name] = returnValue;
-    };
-
     setHoverTrue = () => {
       const { clientInfo } = this.props;
       const { transactionInfo } = this.store;
@@ -144,240 +231,140 @@ class TransitionInput extends Component {
       }
     };
 
-    handleInputChange = (e) => {
-      const {
-        clientInfo,
-        index,
-        name,
-      } = this.props;
-      const { transactionInfo: { approved } } = this.store;
-      const { value } = e.target;
-
-      const newInfoHashString = clientInfo ? 'transitionClientInfo' : 'transactionInfo';
-      if (!approved) {
-        if (index) {
-          this.store[newInfoHashString][name][index - 1] = value;
-        } else {
-          this.store[newInfoHashString][name] = value;
-        }
-      }
-    };
-
-    handleAddressChanged = (address) => {
-      const {
-        clientInfo,
-        index,
-        name,
-      } = this.props;
-      const { transactionInfo: { approved } } = this.store;
-
-      const newInfoHashString = clientInfo ? 'transitionClientInfo' : 'transactionInfo';
-      if (!approved) {
-        if (index) {
-          this.store[newInfoHashString][name][index - 1] = address;
-        } else {
-          this.store[newInfoHashString][name] = address;
-        }
-      }
-    };
-
-    handleAddressSelected = (address) => {
-      const {
-        handleParsedBusinessAddress,
-        handleParsedHomeAddress,
-      } = this.store;
-      geocodeByAddress(address)
-      .then((results) => {
-        const { name } = this.props;
-        if (name === 'business_address') {
-          handleParsedBusinessAddress(results[0]);
-          this.store.transitionClientInfo.updateBusinessAddress = true;
-        } else if (name === 'home_address') {
-          handleParsedHomeAddress(results[0]);
-          this.store.transitionClientInfo.updateHomeAddress = true;
-        }
-      })
-      .catch((error) => console.error('Error', error));
-    };
-
     render() {
-        return (
+      const {
+        boolean,
+        clientInfo,
+        dollar,
+        index,
+        link,
+        name,
+        notes,
+        placesInput,
+        value,
+      } = this.props;
+      const {} = this.store;
+      const {
+        edit,
+        hover,
+      } = this.state;
+
+      const newInfoHashString = clientInfo ? 'transitionClientInfo' : 'transactionInfo';
+      const valueBasedOnIndex = index
+        ? this.store[newInfoHashString][name][index - 1]
+        : this.store[newInfoHashString][name];
+
+      return (
+        <Fragment>
+          {notes ? (
             <Fragment>
-                {this.props.notes ? (
-                    <Fragment>
-                        <div
-                            onMouseEnter={this.setHoverTrue}
-                            onMouseLeave={() => this.setState({ hover: false })}
-                            className="transition-input transition-note">
-                            <textarea
-                                placeholder="Add a note about this section"
-                                value={this.store.transactionInfo[this.props.name]}
-                                onChange={e => this.handleInputChange(e)}
-                            />
-
-                            {this.state.hover && (
-                                <div onClick={() => this.saveEdit(true)} className="transition-edit">
-                                    Save
-                                </div>
-                            )}
-                        </div>
-                    </Fragment>
-                ) : this.props.link ? (
-                    <Fragment>
-                        <div
-                            onMouseEnter={this.setHoverTrue}
-                            onMouseLeave={() => this.setState({ hover: false })}
-                            className="transition-input transition-note">
-                            <a href={this.store.transactionInfo[this.props.name]}>
-                                {this.store.transactionInfo[this.props.name]}
-                            </a>
-                        </div>
-                    </Fragment>
-                ) : (
-                    <Fragment>
-                        <div
-                            className="transition-input"
-                            onMouseEnter={this.setHoverTrue}
-                            onMouseLeave={() => this.setState({ hover: false })}>
-                            {this.state.edit && (
-                                <ClickOutHandler onClickOut={this.cancelEdit}>
-                                    {this.props.boolean ? (
-                                        <select
-                                            onChange={e => this.convertToBoolean(e)}
-                                            value={
-                                                this.props.value ||
-                                                (this.store[
-                                                    this.props.clientInfo ? 'transitionClientInfo' : 'transactionInfo'
-                                                ][this.props.name] &&
-                                                this.store[
-                                                    this.props.clientInfo ? 'transitionClientInfo' : 'transactionInfo'
-                                                ][this.props.name] === true
-                                                    ? 'Yes'
-                                                    : this.store[
-                                                          this.props.clientInfo
-                                                              ? 'transitionClientInfo'
-                                                              : 'transactionInfo'
-                                                      ][this.props.name] === false
-                                                    ? 'No'
-                                                    : 'Select an option')
-                                            }>
-                                            <option>Select an option</option>
-                                            <option>Yes</option>
-                                            <option>No</option>
-                                        </select>
-                                    ) : this.props.placesInput ? (
-                                        <PlacesAutocomplete
-                                            value={
-                                                this.props.index
-                                                    ? this.store[
-                                                          this.props.clientInfo
-                                                              ? 'transitionClientInfo'
-                                                              : 'transactionInfo'
-                                                      ][this.props.name][this.props.index - 1]
-                                                    : this.store[
-                                                          this.props.clientInfo
-                                                              ? 'transitionClientInfo'
-                                                              : 'transactionInfo'
-                                                      ][this.props.name]
-                                            }
-                                            onChange={this.handleAddressChanged}
-                                            onSelect={this.handleAddressSelected}>
-                                            {({ getInputProps, suggestions, getSuggestionItemProps }) => (
-                                                <div className="hyke-autocomplete">
-                                                    <Input
-                                                        {...getInputProps({
-                                                            placeholder: '',
-                                                            className: 'location-search-input'
-                                                        })}
-                                                    />
-                                                    <ul className="hyke-autocomplete__list">
-                                                        {suggestions.map((suggestion, key) => {
-                                                            const className = suggestion.active ? 'is-active' : null;
-                                                            return (
-                                                                <li
-                                                                    key={key}
-                                                                    {...getSuggestionItemProps(suggestion, {
-                                                                        className
-                                                                    })}>
-                                                                    <span>{suggestion.description}</span>
-                                                                </li>
-                                                            );
-                                                        })}
-                                                    </ul>
-                                                </div>
-                                            )}
-                                        </PlacesAutocomplete>
-                                    ) : (
-                                        <input
-                                            type={this.props.dollar ? 'number' : 'text'}
-                                            placeholder={this.props.placeholder}
-                                            value={
-                                                this.props.index
-                                                    ? this.store[
-                                                          this.props.clientInfo
-                                                              ? 'transitionClientInfo'
-                                                              : 'transactionInfo'
-                                                      ][this.props.name][this.props.index - 1]
-                                                    : this.store[
-                                                          this.props.clientInfo
-                                                              ? 'transitionClientInfo'
-                                                              : 'transactionInfo'
-                                                      ][this.props.name]
-                                            }
-                                            onChange={e => this.handleInputChange(e)}
-                                        />
-                                    )}
-
-                                    {this.state.edit && (
-                                        <div onClick={this.saveEdit} className="transition-edit">
-                                            Save
-                                        </div>
-                                    )}
-                                </ClickOutHandler>
-                            )}
-
-                            {!this.state.edit && (
-                                <Fragment>
-                                    <span onClick={this.enterEditMode}>
-                                        {this.props.boolean
-                                            ? this.props.value ||
-                                              (this.store[
-                                                  this.props.clientInfo ? 'transitionClientInfo' : 'transactionInfo'
-                                              ][this.props.name] &&
-                                              this.store[
-                                                  this.props.clientInfo ? 'transitionClientInfo' : 'transactionInfo'
-                                              ][this.props.name] === true
-                                                  ? 'Yes'
-                                                  : this.store[
-                                                        this.props.clientInfo
-                                                            ? 'transitionClientInfo'
-                                                            : 'transactionInfo'
-                                                    ][this.props.name] === false
-                                                  ? 'No'
-                                                  : 'Select an option')
-                                            : this.props.index
-                                            ? this.store[
-                                                  this.props.clientInfo ? 'transitionClientInfo' : 'transactionInfo'
-                                              ][this.props.name][this.props.index - 1]
-                                            : `${this.props.dollar ? '$' : ''}${
-                                                  this.store[
-                                                      this.props.clientInfo ? 'transitionClientInfo' : 'transactionInfo'
-                                                  ][this.props.name]
-                                              }`}
-                                    </span>
-
-                                    {this.state.hover && (
-                                        <div onClick={this.enterEditMode} className="transition-edit">
-                                            Edit
-                                        </div>
-                                    )}
-                                </Fragment>
-                            )}
-                        </div>
-                    </Fragment>
+              <div
+                onMouseEnter={this.setHoverTrue}
+                onMouseLeave={() => this.setState({ hover: false })}
+                className="transition-input transition-note"
+              >
+                <textarea
+                  placeholder="Add a note about this section"
+                  value={this.store.transactionInfo[name]}
+                  onChange={e => this.handleInputChange(e, newInfoHashString)}
+                />
+                {hover && (
+                  <div onClick={() => this.saveEdit(true)} className="transition-edit">
+                    Save
+                  </div>
                 )}
+              </div>
             </Fragment>
-        );
+          ) : link ? (
+            <Fragment>
+              <div
+                onMouseEnter={this.setHoverTrue}
+                onMouseLeave={() => this.setState({ hover: false })}
+                className="transition-input transition-note"
+              >
+                <a href={this.store.transactionInfo[name]}>
+                  {this.store.transactionInfo[name]}
+                </a>
+              </div>
+            </Fragment>
+          ) : (
+            <Fragment>
+              <div
+                className="transition-input"
+                onMouseEnter={this.setHoverTrue}
+                onMouseLeave={() => this.setState({ hover: false })}
+              >
+                {edit && (
+                  <ClickOutHandler onClickOut={this.cancelEdit}>
+                    {boolean ? (
+                      <select
+                        onChange={e => this.convertToBoolean(e)}
+                        value={this.handleSetSelectValue(newInfoHashString)}
+                      >
+                        <option>Select an option</option>
+                        <option>Yes</option>
+                        <option>No</option>
+                      </select>
+                    ) : placesInput ? (
+                      <PlacesAutocomplete
+                        value={valueBasedOnIndex}
+                        onChange={this.handleAddressChanged(newInfoHashString)}
+                        onSelect={this.handleAddressSelected}
+                      >
+                      {({ getInputProps, suggestions, getSuggestionItemProps }) => (
+                        <div className="hyke-autocomplete">
+                          <Input
+                            {...getInputProps({placeholder: '', className: 'location-search-input'})}
+                          />
+                          <ul className="hyke-autocomplete__list">
+                            {suggestions.map((suggestion, key) => (
+                                <li
+                                  key={key}
+                                  {...getSuggestionItemProps(suggestion, {suggestion.active ? 'is-active' : null})}
+                                >
+                                  <span>{suggestion.description}</span>
+                                </li>
+                              );
+                            )}
+                          </ul>
+                        </div>
+                      )}
+                    </PlacesAutocomplete>
+                  ) : (
+                    <input
+                      type={dollar ? 'number' : 'text'}
+                      placeholder={placeholder}
+                      value={valueBasedOnIndex}
+                      onChange={e => this.handleInputChange(e, newInfoHashString)}
+                    />
+                  )}
+                  {edit
+                    && (
+                      <div onClick={this.saveEdit} className="transition-edit">
+                        Save
+                      </div>
+                  )}
+                </ClickOutHandler>
+              )}
+              {!edit
+                && (
+                  <Fragment>
+                    <span onClick={this.enterEditMode}>
+                      {this.handleSetSpanValue(newInfoHashString)}
+                    </span>
+                    {hover
+                      && (
+                        <div onClick={this.enterEditMode} className="transition-edit">
+                          Edit
+                        </div>
+                    )}
+                  </Fragment>
+                )}
+              </div>
+            </Fragment>
+          )}
+        </Fragment>
+      );
     }
 }
 
