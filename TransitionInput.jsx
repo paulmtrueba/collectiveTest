@@ -1,8 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import { observer, inject } from 'mobx-react';
-import ClickOutHandler from 'react-onclickout';
-import PlacesAutocomplete, { geocodeByAddress } from 'react-places-autocomplete';
-import { Input } from 'semantic-ui-react';
+import { geocodeByAddress } from 'react-places-autocomplete';
+
+import { NotesComponent } from 'components/TransitionInput/NotesComponent';
+import { LinkComponent } from 'components/TransitionInput/LinkComponent';
+import { DefaultComponent } from 'components/TransitionInput/DefaultComponent';
 
 const namesArray = [
   'home_address',
@@ -85,9 +87,11 @@ class TransitionInput extends Component {
       } = this.store;
 
       let newValue = transactionInfo[name][index - 1];
+
       if (!index) {
         newValue = transactionInfo[name]
       }
+
       if (!transactionInfo.approved) {
         this.setState({
           oldValue: newValue,
@@ -159,6 +163,7 @@ class TransitionInput extends Component {
       } = this.props;
 
       if (value) return value;
+
       switch(this.store[newInfoHashString][name]) {
         case 'true':
           return 'Yes';
@@ -177,9 +182,19 @@ class TransitionInput extends Component {
         name,
       } = this.props;
 
-      if (boolean) return this.handleSetSelectValue(newInfoHashString);
-      if (index) return this.store[newInfoHashString][name][index - 1];
-      return `${dollar ? '$' : ''}${this.store[newInfoHashString][name]}`;
+      let returnValue = `${dollar ? '$' : ''}${this.store[newInfoHashString][name]}`
+
+      if (boolean) returnValue = this.handleSetSelectValue(newInfoHashString);
+
+      if (index) returnValue = this.store[newInfoHashString][name][index - 1];
+      
+      return returnValue;
+    }
+
+    handleSetState = (key, value) => {
+      this.setState({
+        [key]: value,
+      });
     }
 
     saveEdit = (removeBtn) => {
@@ -243,7 +258,7 @@ class TransitionInput extends Component {
         placesInput,
         value,
       } = this.props;
-      const {} = this.store;
+      const { transactionInfo } = this.store;
       const {
         edit,
         hover,
@@ -257,111 +272,44 @@ class TransitionInput extends Component {
       return (
         <Fragment>
           {notes ? (
-            <Fragment>
-              <div
-                onMouseEnter={this.setHoverTrue}
-                onMouseLeave={() => this.setState({ hover: false })}
-                className="transition-input transition-note"
-              >
-                <textarea
-                  placeholder="Add a note about this section"
-                  value={this.store.transactionInfo[name]}
-                  onChange={e => this.handleInputChange(e, newInfoHashString)}
-                />
-                {hover && (
-                  <div onClick={() => this.saveEdit(true)} className="transition-edit">
-                    Save
-                  </div>
-                )}
-              </div>
-            </Fragment>
+            <NotesComponent
+              hover={hover}
+              name={name}
+              newInfoHashString={newInfoHashString}
+              transactionInfo={transactionInfo}
+              handleInputChange={this.handleInputChange}
+              handleSetState={this.handleSetState}
+              saveEdit={this.saveEdit}
+              setHoverTrue={this.setHoverTrue}
+            />
           ) : link ? (
-            <Fragment>
-              <div
-                onMouseEnter={this.setHoverTrue}
-                onMouseLeave={() => this.setState({ hover: false })}
-                className="transition-input transition-note"
-              >
-                <a href={this.store.transactionInfo[name]}>
-                  {this.store.transactionInfo[name]}
-                </a>
-              </div>
-            </Fragment>
+            <LinkComponent
+              name={name}
+              transactionInfo={transactionInfo}
+              handleSetState={this.handleSetState}
+              setHoverTrue={this.setHoverTrue}
+            />
           ) : (
-            <Fragment>
-              <div
-                className="transition-input"
-                onMouseEnter={this.setHoverTrue}
-                onMouseLeave={() => this.setState({ hover: false })}
-              >
-                {edit && (
-                  <ClickOutHandler onClickOut={this.cancelEdit}>
-                    {boolean ? (
-                      <select
-                        onChange={e => this.convertToBoolean(e)}
-                        value={this.handleSetSelectValue(newInfoHashString)}
-                      >
-                        <option>Select an option</option>
-                        <option>Yes</option>
-                        <option>No</option>
-                      </select>
-                    ) : placesInput ? (
-                      <PlacesAutocomplete
-                        value={valueBasedOnIndex}
-                        onChange={this.handleAddressChanged(newInfoHashString)}
-                        onSelect={this.handleAddressSelected}
-                      >
-                      {({ getInputProps, suggestions, getSuggestionItemProps }) => (
-                        <div className="hyke-autocomplete">
-                          <Input
-                            {...getInputProps({placeholder: '', className: 'location-search-input'})}
-                          />
-                          <ul className="hyke-autocomplete__list">
-                            {suggestions.map((suggestion, key) => (
-                                <li
-                                  key={key}
-                                  {...getSuggestionItemProps(suggestion, {suggestion.active ? 'is-active' : null})}
-                                >
-                                  <span>{suggestion.description}</span>
-                                </li>
-                              );
-                            )}
-                          </ul>
-                        </div>
-                      )}
-                    </PlacesAutocomplete>
-                  ) : (
-                    <input
-                      type={dollar ? 'number' : 'text'}
-                      placeholder={placeholder}
-                      value={valueBasedOnIndex}
-                      onChange={e => this.handleInputChange(e, newInfoHashString)}
-                    />
-                  )}
-                  {edit
-                    && (
-                      <div onClick={this.saveEdit} className="transition-edit">
-                        Save
-                      </div>
-                  )}
-                </ClickOutHandler>
-              )}
-              {!edit
-                && (
-                  <Fragment>
-                    <span onClick={this.enterEditMode}>
-                      {this.handleSetSpanValue(newInfoHashString)}
-                    </span>
-                    {hover
-                      && (
-                        <div onClick={this.enterEditMode} className="transition-edit">
-                          Edit
-                        </div>
-                    )}
-                  </Fragment>
-                )}
-              </div>
-            </Fragment>
+            <DefaultComponent
+              boolean={boolean}
+              dollar={dollar}
+              edit={edit}
+              hover={hover}
+              placeHolder={placeholder}
+              placesInput={placesInput}
+              valueBasedOnIndex={valueBasedOnIndex}
+              cancelEdit={this.cancelEdit}
+              convertToBoolean={this.convertToBoolean}
+              enterEditMode={this.enterEditMode}
+              handleAddressChanged={this.handleAddressChanged}
+              handleAddressSelected={this.handleAddressSelected}
+              handleInputChange={this.handleInputChange}
+              handleSetSelectValue={this.handleSetSelectValue}
+              handleSetSpanValue={this.handleSetSpanValue}
+              handleSetState={this.handleSetState}
+              saveEdit={this.saveEdit}
+              setHoverTrue={this.setHoverTrue}
+            />
           )}
         </Fragment>
       );
