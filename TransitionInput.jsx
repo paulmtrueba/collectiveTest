@@ -54,12 +54,20 @@ class TransitionInput extends Component {
     };
 
     cancelEdit = () => {
-        if (this.props.index) {
-            this.store.transactionInfo[this.props.name][this.props.index - 1] = this.state.oldValue;
-        } else {
-            this.store.transactionInfo[this.props.name] = this.state.oldValue;
-        }
-        this.setState({ edit: false });
+      const {
+        index,
+        name,
+      } = this.props;
+      const { transactionInfo } = this.store;
+      const { oldValue } = this.state;
+      if (index) {
+          transactionInfo[name][index - 1] = oldValue;
+      } else {
+          transactionInfo[name] = oldValue;
+      }
+      this.setState({
+        edit: false,
+      });
     };
 
     saveEdit = removeBtn => {
