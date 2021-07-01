@@ -163,18 +163,22 @@ class TransitionInput extends Component {
       }
     };
 
-    handleAddressChanged = address => {
-        if (!this.store.transactionInfo.approved) {
-            if (this.props.index) {
-                this.store[this.props.clientInfo ? 'transitionClientInfo' : 'transactionInfo'][this.props.name][
-                    this.props.index - 1
-                ] = address;
-            } else {
-                this.store[this.props.clientInfo ? 'transitionClientInfo' : 'transactionInfo'][
-                    this.props.name
-                ] = address;
-            }
+    handleAddressChanged = (address) => {
+      const {
+        clientInfo,
+        index,
+        name,
+      } = this.props;
+      const { transactionInfo: { approved } } = this.store;
+
+      const newInfoHashString = clientInfo ? 'transitionClientInfo' : 'transactionInfo';
+      if (!approved) {
+        if (index) {
+          this.store[newInfoHashString][name][index - 1] = address;
+        } else {
+          this.store[newInfoHashString][name] = address;
         }
+      }
     };
 
     handleAddressSelected = address => {
