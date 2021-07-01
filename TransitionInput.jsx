@@ -30,13 +30,13 @@ const namesArray = [
 @observer
 class TransitionInput extends Component {
     constructor(props) {
-        super(props);
-        this.store = props.OnboardHykeStore;
-        this.state = {
-          edit: false,
-          hover: false,
-          oldValue: '',
-        };
+      super(props);
+      this.store = props.OnboardHykeStore;
+      this.state = {
+        edit: false,
+        hover: false,
+        oldValue: '',
+      };
     }
 
     enterEditMode = () => {
@@ -51,12 +51,12 @@ class TransitionInput extends Component {
       if (!index) {
         newValue = transactionInfo[name]
       }
-        if (!transactionInfo.approved) {
-            this.setState({
-                oldValue: newValue,
-                edit: true
-            });
-        }
+      if (!transactionInfo.approved) {
+        this.setState({
+          oldValue: newValue,
+          edit: true,
+        });
+      }
     };
 
     cancelEdit = () => {
@@ -67,9 +67,9 @@ class TransitionInput extends Component {
       const { transactionInfo } = this.store;
       const { oldValue } = this.state;
       if (index) {
-          transactionInfo[name][index - 1] = oldValue;
+        transactionInfo[name][index - 1] = oldValue;
       } else {
-          transactionInfo[name] = oldValue;
+        transactionInfo[name] = oldValue;
       }
       this.setState({
         edit: false,
@@ -88,42 +88,46 @@ class TransitionInput extends Component {
         updateClientInfo,
         updateTransactionInfo,
       } = this.store;
-        if (clientInfo) {
-            if (namesArray.includes(name)) {
-                updateClientInfo(name);
-            }
-        } else if (!transactionInfo.approved) {
-            if (name.includes('advised_salary')) {
-              const newName = Math.round(transactionInfo[name] / 1000) * 1000;
-              transactionInfo[name] = newName;
-              getTransitionPlanPotentialSavings();
-            }
-            updateTransactionInfo(transactionClientId);
+      if (clientInfo) {
+        if (namesArray.includes(name)) {
+          updateClientInfo(name);
         }
+      } else if (!transactionInfo.approved) {
+        if (name.includes('advised_salary')) {
+          const newName = Math.round(transactionInfo[name] / 1000) * 1000;
+          transactionInfo[name] = newName;
+          getTransitionPlanPotentialSavings();
+        }
+        updateTransactionInfo(transactionClientId);
+      }
 
-        if (removeBtn) {
-            this.setState({
-                edit: false,
-                hover: false
-            });
-        } else {
-            this.setState({
-                edit: false
-            });
-        }
+      if (removeBtn) {
+        this.setState({
+          edit: false,
+          hover: false,
+        });
+      } else {
+        this.setState({
+          edit: false,
+        });
+      }
     };
 
-    convertToBoolean = e => {
-        let value = false;
-        if (e.target.value === 'Yes') {
-            value = true;
-        }
+    convertToBoolean = (e) => {
+      const { name } = this.props;
+      const { transactionInfo } = this.store;
+      const { value } = e.target;
 
-        if (e.target.value === 'Select an option') {
-            value = null;
-        }
+      let returnValue = false;
+      if (value === 'Yes') {
+        returnValue = true;
+      }
 
-        this.store.transactionInfo[this.props.name] = value;
+      if (value === 'Select an option') {
+        returnValue = null;
+      }
+
+      transactionInfo[name] = returnValue;
     };
 
     setHoverTrue = () => {
