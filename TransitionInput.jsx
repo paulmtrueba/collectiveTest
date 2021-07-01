@@ -2,9 +2,9 @@ import React, { Component, Fragment } from 'react';
 import { observer, inject } from 'mobx-react';
 import { geocodeByAddress } from 'react-places-autocomplete';
 
-import { NotesComponent } from 'components/TransitionInput/NotesComponent';
-import { LinkComponent } from 'components/TransitionInput/LinkComponent';
-import { DefaultComponent } from 'components/TransitionInput/DefaultComponent';
+import { NotesComponent } from './components/TransitionInput/NotesComponent';
+import { LinkComponent } from './components/TransitionInput/LinkComponent';
+import { DefaultComponent } from './components/TransitionInput/DefaultComponent';
 
 // broke names array out as global to make saveEdit function more readable, legibility
 const namesArray = [
