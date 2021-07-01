@@ -181,18 +181,23 @@ class TransitionInput extends Component {
       }
     };
 
-    handleAddressSelected = address => {
-        geocodeByAddress(address)
-            .then(results => {
-                if (this.props.name === 'business_address') {
-                    this.store.handleParsedBusinessAddress(results[0]);
-                    this.store.transitionClientInfo.updateBusinessAddress = true;
-                } else if (this.props.name === 'home_address') {
-                    this.store.handleParsedHomeAddress(results[0]);
-                    this.store.transitionClientInfo.updateHomeAddress = true;
-                }
-            })
-            .catch(error => console.error('Error', error));
+    handleAddressSelected = (address) => {
+      const {
+        handleParsedBusinessAddress,
+        handleParsedHomeAddress,
+      } = this.store;
+      geocodeByAddress(address)
+      .then((results) => {
+        const { name } = this.props;
+        if (name === 'business_address') {
+          handleParsedBusinessAddress(results[0]);
+          this.store.transitionClientInfo.updateBusinessAddress = true;
+        } else if (name === 'home_address') {
+          handleParsedHomeAddress(results[0]);
+          this.store.transitionClientInfo.updateHomeAddress = true;
+        }
+      })
+      .catch((error) => console.error('Error', error));
     };
 
     render() {
