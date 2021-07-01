@@ -90,10 +90,10 @@ class TransitionInput extends Component {
         transactionInfo,
       } = this.store;
 
-      let newValue = transactionInfo[name][index - 1];
+      let newValue = transactionInfo[name];
 
-      if (!index) {
-        newValue = transactionInfo[name]
+      if (index) {
+        newValue = transactionInfo[name][index - 1];
       }
 
       if (!transactionInfo.approved) {
@@ -111,7 +111,6 @@ class TransitionInput extends Component {
       // existing logic left unchanged, nested if could be changed but it makes the code a bit more confusing, left for legibility
       // passed in a param containing the old ternary's value, legibility
       const {
-        clientInfo,
         index,
         name,
       } = this.props;
@@ -157,7 +156,6 @@ class TransitionInput extends Component {
       // existing logic left unchanged, nested if could be changed but it makes the code a bit more confusing, left for legibility
       // passed in a param containing an old ternary's value, legibility
       const {
-        clientInfo,
         index,
         name,
       } = this.props;
@@ -178,7 +176,6 @@ class TransitionInput extends Component {
       // into a value for a select option dropdown, reusability and legibility
       // passed in a param containing an old ternary's value, legibility
       const {
-        clientInfo,
         name,
         value,
       } = this.props;
