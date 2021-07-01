@@ -10,7 +10,7 @@ const mockStore = configureMockStore([ thunk ]);
 const getMockedProps = () => ({
   boolean: false,
   clientInfo: false,
-  dollar: '',
+  dollar: false,
   index: 0,
   link: false,
   name: '',
@@ -30,8 +30,8 @@ const defaultState = {
   oldValue: '',
 }
 
-describe('<FormModal />', () => {
-  let store
+describe('<TransitionInput />', () => {
+  let store;
   let wrapper;
   let mockedProps;
 
@@ -63,12 +63,12 @@ describe('<FormModal />', () => {
   it('renders one LinkComponent when link', () => {
     mockedProps.link = true;
     wrapper = shallow(<TransitionInput { store={mockedStore}, ...mockedProps }/>);
-    expect(wrapper.find('NotesComponent')).toHaveLength(1);
+    expect(wrapper.find('LinkComponent')).toHaveLength(1);
   });
 
   it('renders one DefaultComponent by default', () => {
     wrapper = shallow(<TransitionInput { store={mockedStore}, ...mockedProps }/>);
-    expect(wrapper.find('NotesComponent')).toHaveLength(1);
+    expect(wrapper.find('DefaultComponent')).toHaveLength(1);
   });
 
   describe('when on cancelEdit', () => {
@@ -95,7 +95,7 @@ describe('<FormModal />', () => {
   });
 
   describe('when on convertToBoolean', () => {
-    it('successfully sets store to true when param value === "Yes"', () => {
+    it('successfully sets store to true when param value === \'Yes\'', () => {
       const event = {
         target: {
           value: 'Yes',
@@ -109,7 +109,7 @@ describe('<FormModal />', () => {
       );
     });
 
-    it('successfully sets store to false when param value === "No"', () => {
+    it('successfully sets store to false when param value === \'No\'', () => {
       const event = {
         target: {
           value: 'No',
@@ -123,7 +123,7 @@ describe('<FormModal />', () => {
       );
     });
 
-    it('successfully sets store to null when param value === "Select an option"', () => {
+    it('successfully sets store to null when param value === \'Select an option\'', () => {
       const event = {
         target: {
           value: 'Select an option',
@@ -267,7 +267,7 @@ describe('<FormModal />', () => {
       wrapper.instance().handleSetSelectValue('transactionInfo').toEqual(1);
     });
 
-    it('successfully returns "Yes" if value === 0 and store === "true"', () => {
+    it('successfully returns \'Yes\' if value === 0 and store === \'true\'', () => {
       mockedProps.value = 0;
       mockdeProps.name = 'test';
       mockedStore.transactionInfo.test = 'true';
@@ -275,7 +275,7 @@ describe('<FormModal />', () => {
       wrapper.instance().handleSetSelectValue('transactionInfo').toEqual('Yes');
     });
 
-    it('successfully returns "No" if value === 0 and store === "false"', () => {
+    it('successfully returns \'No\' if value === 0 and store === \'false\'', () => {
       mockedProps.value = 0;
       mockdeProps.name = 'test';
       mockedStore.transactionInfo.test = 'false';
@@ -283,7 +283,7 @@ describe('<FormModal />', () => {
       wrapper.instance().handleSetSelectValue('transactionInfo').toEqual('Yes');
     });
 
-    it('successfully returns "Select an option" if value === 0 and store === null', () => {
+    it('successfully returns \'Select an option\' if value === 0 and store === null', () => {
       mockedProps.value = 0;
       mockdeProps.name = 'test';
       mockedStore.transactionInfo.test = null;
@@ -333,7 +333,7 @@ describe('<FormModal />', () => {
       wrapper.instance().handleSetSpanValue('transactionInfo').toEqual(1);
     });
 
-    it('successfully returns "Yes" if boolean === true and index === 0 and store === "true"', () => {
+    it('successfully returns \'Yes\' if boolean === true and index === 0 and store === \'true\'', () => {
       mockedProps.boolean = true;
       mockedProps.index = 0;
       mockdeProps.name = 'test';
@@ -343,7 +343,7 @@ describe('<FormModal />', () => {
       wrapper.instance().handleSetSpanValue('transactionInfo').toEqual('Yes');
     });
 
-    it('successfully returns "No" if boolean === true and index === 0 and store === "false"', () => {
+    it('successfully returns \'No\' if boolean === true and index === 0 and store === \'false\'', () => {
       mockedProps.boolean = true;
       mockedProps.index = 0;
       mockdeProps.name = 'test';
@@ -353,7 +353,7 @@ describe('<FormModal />', () => {
       wrapper.instance().handleSetSpanValue('transactionInfo').toEqual('No');
     });
 
-    it('successfully returns "Select an option" if boolean === true and index === 0 and store === null', () => {
+    it('successfully returns \'Select an option\' if boolean === true and index === 0 and store === null', () => {
       mockedProps.boolean = true;
       mockedProps.index = 0;
       mockdeProps.name = 'test';
@@ -382,7 +382,7 @@ describe('<FormModal />', () => {
   });
 
   describe('when on saveEdit', () => {
-    it('successfully updates store if clientInfo === false and transactionInfo.approved === false and props.name includes "advised_salary"', () => {
+    it('successfully updates store if clientInfo === false and transactionInfo.approved === false and props.name includes \'advised_salary\'', () => {
       mockedProps.clientInfo = false;
       mockdeProps.name = 'advised_salary';
       mockedStore.transactionInfo.advised_salary = 999.9999;

@@ -115,7 +115,7 @@ const DefaultComponent = ({
 
   DefaultComponent.propTypes = {
     boolean: boolean.isRequired,
-    dollar: string.isRequired,
+    dollar: boolean.isRequired,
     edit: boolean.isRequired,
     hover: boolean.isRequired,
     placeHolder: string.isRequired,
