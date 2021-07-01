@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-// created display component to break up thejsx in the parent container, legibility
+// created display component to break up the jsx in the parent container, legibility
 // destructuring and formatting for legibility
-// propTypes declarations for type checking
-// added displayName for unit testing identification
-// removed React.Fragment since render elements are surrounded by one parent div
+// propTypes declarations for type checking, future proofing
+// added displayName for unit testing identification, unit testing
+// removed React.Fragment since render elements are surrounded by one parent div, legibility
 
 const LinkComponent = ({
   name,

@@ -4,14 +4,14 @@ import ClickOutHandler from 'react-onclickout';
 import PlacesAutocomplete from 'react-places-autocomplete';
 import { Input } from 'semantic-ui-react';
 
-// created display component to break up thejsx in the parent container, legibility
+// created display component to break up the jsx in the parent container, legibility
 // destructuring and formatting for legibility
-// propTypes declarations for type checking
-// added displayName for unit testing identification
+// propTypes declarations for type checking, future proofing
+// added displayName for unit testing identification, unit testing
 // not super happy with the leftover ternary but it's just the one in here so it's much more legible
 // it seems to be much easier to eyeball how the logic is working from within the component
-// moved specific imports to this component out of parent
-// removed React.Fragment since render elements are surrounded by one parent div
+// moved specific imports to this component out of parent, separation of concerns
+// removed React.Fragment since render elements are surrounded by one parent div, legibility
 
 const DefaultComponent = ({
   boolean,
