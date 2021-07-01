@@ -26,15 +26,28 @@ class TransitionInput extends Component {
     constructor(props) {
         super(props);
         this.store = props.OnboardHykeStore;
-        this.state = { edit: false, hover: false, oldValue: '' };
+        this.state = {
+          edit: false,
+          hover: false,
+          oldValue: '',
+        };
     }
 
     enterEditMode = () => {
-        if (!this.store.transactionInfo.approved) {
+      const {
+        index,
+        name,
+      } = this.props;
+      const {
+        transactionInfo,
+      } = this.store;
+      let newValue = transactionInfo[name][index - 1];
+      if (!index) {
+        newValue = transactionInfo[name]
+      }
+        if (!transactionInfo.approved) {
             this.setState({
-                oldValue: this.props.index
-                    ? this.store.transactionInfo[this.props.name][this.props.index - 1]
-                    : this.store.transactionInfo[this.props.name],
+                oldValue: newValue,
                 edit: true
             });
         }
