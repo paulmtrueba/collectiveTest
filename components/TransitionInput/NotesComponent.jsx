@@ -52,10 +52,10 @@ const NotesComponent = ({
     name: string.isRequired,
     newInfoHashString: string.isRequired,
     transactionInfo: shape({}).isRequired,
-    handleInputChange: func.isRequried,
-    handleSetState: func.isRequried,
-    saveEdit: func.isRequried,
-    setHoverTrue: func.isRequried,
+    handleInputChange: func.isRequired,
+    handleSetState: func.isRequired,
+    saveEdit: func.isRequired,
+    setHoverTrue: func.isRequired,
   };
 }
 

@@ -199,7 +199,7 @@ class TransitionInput extends Component {
     handleSetSpanValue = (newInfoHashString) => {
       // created to break out a complicated, nested ternary used to set the value of a span
       // passed in a param containing an old ternary's value, legibility
-      // not a giant fan of single line if statements but they are pretty legible in this case
+      // not a fan of single line if statements but they are pretty legible in this case
       const {
         boolean,
         dollar,
@@ -227,11 +227,11 @@ class TransitionInput extends Component {
       // destructuring for improved legibility
       // change out of habit from using eslint,
       // enclosed function params in parens because arrow function isn't implicit return, implied lint error fix
-      // there are a few minor things that could be refactoreed but that doesn't really solve anything
+      // there are a few minor things that could be refactored but that doesn't really solve anything
       // nested ifs and else if could be changed but it doesn't really improve on legibility at all
       // two setState calls aren't ideal and it could be one call with only the values being determined by conditional
-      // but that is incredibly minor,
-      // if more than two I would 100% refactor to having conditional values passed to one setState
+      // but that is minor,
+      // if more than two I would refactor to having conditional values passed to one setState
       const {
         clientInfo,
         name,
