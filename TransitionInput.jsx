@@ -4,6 +4,12 @@ import ClickOutHandler from 'react-onclickout';
 import PlacesAutocomplete, { geocodeByAddress } from 'react-places-autocomplete';
 import { Input } from 'semantic-ui-react';
 
+const namesArray = [
+  'home_address',
+  'business_address',
+  'home_aptunit',
+  'business_aptunit',
+];
 /**
  * @example
  *   <TransitionInput name="separate_business_bank_account" boolean />
@@ -70,18 +76,29 @@ class TransitionInput extends Component {
       });
     };
 
-    saveEdit = removeBtn => {
-        if (this.props.clientInfo) {
-            if (['home_address', 'business_address', 'home_aptunit', 'business_aptunit'].includes(this.props.name)) {
-                this.store.updateClientInfo(this.props.name);
+    saveEdit = (removeBtn) => {
+      const {
+        clientInfo,
+        name,
+      } = this.props;
+      const {
+        transactionClientId,
+        transactionInfo,
+        getTransitionPlanPotentialSavings,
+        updateClientInfo,
+        updateTransactionInfo,
+      } = this.store;
+        if (clientInfo) {
+            if (namesArray.includes(name)) {
+                updateClientInfo(name);
             }
-        } else if (!this.store.transactionInfo.approved) {
-            if (this.props.name.includes('advised_salary')) {
-                this.store.transactionInfo[this.props.name] =
-                    Math.round(this.store.transactionInfo[this.props.name] / 1000) * 1000;
-                this.store.getTransitionPlanPotentialSavings();
+        } else if (!transactionInfo.approved) {
+            if (name.includes('advised_salary')) {
+              const newName = Math.round(transactionInfo[name] / 1000) * 1000;
+              transactionInfo[name] = newName;
+              getTransitionPlanPotentialSavings();
             }
-            this.store.updateTransactionInfo(this.store.transactionClientId);
+            updateTransactionInfo(transactionClientId);
         }
 
         if (removeBtn) {
