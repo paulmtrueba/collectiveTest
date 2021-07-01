@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 // propTypes declarations for type checking, future proofing
 // added displayName for unit testing identification, unit testing
 // removed React.Fragment since render elements are surrounded by one parent div, legibility
+// switched all event listeners over to call arrow functions to prevent class methods from being called on instanciation
 
 const LinkComponent = ({
   name,
@@ -14,7 +15,7 @@ const LinkComponent = ({
   setHoverTrue,
 }) => (
   <div
-    onMouseEnter={setHoverTrue}
+    onMouseEnter={() => setHoverTrue()}
     onMouseLeave={() => handleSetState('hover', false)}
     className="transition-input transition-note"
   >

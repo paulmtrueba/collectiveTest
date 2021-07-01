@@ -12,6 +12,7 @@ import { Input } from 'semantic-ui-react';
 // it seems to be much easier to eyeball how the logic is working from within the component
 // moved specific imports to this component out of parent, separation of concerns
 // removed React.Fragment since render elements are surrounded by one parent div, legibility
+// switched all event listeners over to call arrow functions to prevent class methods from being called on instanciation
 
 const DefaultComponent = ({
   boolean,
@@ -43,7 +44,7 @@ const DefaultComponent = ({
         {boolean ? (
           <select
             onChange={e => convertToBoolean(e)}
-            value={handleSetSelectValue(newInfoHashString)}
+            value={() => handleSetSelectValue(newInfoHashString)}
           >
             <option>Select an option</option>
             <option>Yes</option>
@@ -77,7 +78,7 @@ const DefaultComponent = ({
         <input
           type={dollar ? 'number' : 'text'}
           placeholder={placeholder}
-          value={valueBasedOnIndex}
+          value={() => valueBasedOnIndex()}
           onChange={e => handleInputChange(e, newInfoHashString)}
         />
       )}

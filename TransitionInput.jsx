@@ -44,6 +44,10 @@ class TransitionInput extends Component {
     }
     // alphabetized class methods for easier bugfixing, refactoring or additional coding in future, future proofing
     // reformatted everything down to one tab spacing, legibility
+    // context assumption that index prop will never change for each page visit or else data type of
+    // this.store.transactionInfo[name][index - 1] and this.store.transactionInfo[name] will be in conflict with
+    // regards to the default value of state.oldValue since it would need to switch between a string and a collection or object
+    // in order for existing logic to work properly
 
     cancelEdit = () => {
       // destructuring and formatting for legibility
