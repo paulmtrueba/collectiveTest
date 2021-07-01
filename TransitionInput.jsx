@@ -279,10 +279,10 @@ class TransitionInput extends Component {
 
     render() {
       // destructuring for improved legibility
-      // created a const for newInfoHashString that replaces a ternary used multiple times
+      // created a const for newInfoHashString that replaces a ternary duplicated multiple times
       // this const is passed into other class methods from here so that if it ever needs
       // to be changed a dev only needs change it once inside render and not multiple times inside each method, reusability and legibility
-      // created a const for valueBasedOnIndex that replaces a ternary used twice in the DefaultComponent, reusability and legibility
+      // created a const for valueBasedOnIndex that replaces a ternary duplicated twice in the DefaultComponent, reusability and legibility
       // broke out each section of jsx that was being rendered by ternary into components, legibility
       const {
         boolean,

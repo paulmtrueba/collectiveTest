@@ -373,12 +373,14 @@ describe('<TransitionInput />', () => {
     });
   });
 
-  it('successfully handles state change', () => {
-    wrapper = shallow(<TransitionInput { ...mockedProps }/>);
-    wrapper.instance().handleSetState('test', true);
-    return sleep(10).then(
-      expect(wrapper.instance().state.test).toEqual(true),
-    );
+  describe('when on handleSetState', () => {
+    it('successfully handles state change', () => {
+      wrapper = shallow(<TransitionInput { ...mockedProps }/>);
+      wrapper.instance().handleSetState('test', true);
+      return sleep(10).then(
+        expect(wrapper.instance().state.test).toEqual(true),
+      );
+    });
   });
 
   describe('when on saveEdit', () => {
