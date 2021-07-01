@@ -1,6 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+// created display component to break up thejsx in the parent container, legibility
+// destructuring and formatting for legibility
+// propTypes declarations for type checking
+// added displayName for unit testing identification
+// removed React.Fragment since render elements are surrounded by one parent div
+
 const NotesComponent = ({
   hover,
   name,

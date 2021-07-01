@@ -6,6 +6,7 @@ import { NotesComponent } from 'components/TransitionInput/NotesComponent';
 import { LinkComponent } from 'components/TransitionInput/LinkComponent';
 import { DefaultComponent } from 'components/TransitionInput/DefaultComponent';
 
+// broke names array out as global to make saveEdit function more readable, legibility
 const namesArray = [
   'home_address',
   'business_address',
@@ -34,25 +35,28 @@ class TransitionInput extends Component {
     constructor(props) {
       super(props);
       this.store = props.OnboardHykeStore;
+      //formatting for legibility
       this.state = {
         edit: false,
         hover: false,
         oldValue: '',
       };
     }
+    // alphabetized class methods for easier bugfixing, refactoring or additional coding in future, future proofing
+    // reformatted everything down to one tab spacing, legibility
 
     cancelEdit = () => {
+      // destructuring and formatting for legibility
       const {
         index,
         name,
       } = this.props;
-      const { transactionInfo } = this.store;
       const { oldValue } = this.state;
 
       if (index) {
-        transactionInfo[name][index - 1] = oldValue;
+        this.store.transactionInfo[name][index - 1] = oldValue;
       } else {
-        transactionInfo[name] = oldValue;
+        this.store.transactionInfo[name] = oldValue;
       }
       this.setState({
         edit: false,
@@ -60,24 +64,24 @@ class TransitionInput extends Component {
     };
 
     convertToBoolean = (e) => {
+      // destructuring and refactor logic a bit for improved legibility
+      // change out of habit from using eslint,
+      // enclosed function params in parens because arrow function isn't implicit return, implied lint error fix
+      // semantic changes, existing logic worked fine and was legible
       const { name } = this.props;
-      const { transactionInfo } = this.store;
       const { value } = e.target;
 
-      let returnValue = false;
+      let returnValue = value === 'Yes';
 
-      if (value === 'Yes') {
-        returnValue = true;
-      }
+      if (value === 'Select an option') returnValue = null;
 
-      if (value === 'Select an option') {
-        returnValue = null;
-      }
-
-      transactionInfo[name] = returnValue;
+      this.store.transactionInfo[name] = returnValue;
     };
 
     enterEditMode = () => {
+      // destructuring and refactor logic a bit for improved legibility
+      // removed ternary and replaced with let variable and a single conditional, legibility
+      // created let to hold the value for setState instead of performing logic within that call, legibility
       const {
         index,
         name,
@@ -101,6 +105,11 @@ class TransitionInput extends Component {
     };
 
     handleAddressChanged = (address, newInfoHashString) => {
+      // destructuring for improved legibility
+      // change out of habit from using eslint,
+      // enclosed function params in parens because arrow function isn't implicit return, implied lint error fix
+      // existing logic left unchanged, nested if could be changed but it makes the code a bit more confusing, left for legibility
+      // passed in a param containing the old ternary's value, legibility
       const {
         clientInfo,
         index,
@@ -118,6 +127,10 @@ class TransitionInput extends Component {
     };
 
     handleAddressSelected = (address) => {
+      // destructuring for improved legibility
+      // change out of habit from using eslint,
+      // enclosed function params in parens because arrow function isn't implicit return, implied lint error fix
+      // destrucutred this.props.name within callback in case that value is subject to changes from the async call, order of operations
       const {
         handleParsedBusinessAddress,
         handleParsedHomeAddress,
@@ -138,6 +151,11 @@ class TransitionInput extends Component {
     };
 
     handleInputChange = (e, newInfoHashString) => {
+      // destructuring for improved legibility
+      // change out of habit from using eslint,
+      // enclosed function params in parens because arrow function isn't implicit return, implied lint error fix
+      // existing logic left unchanged, nested if could be changed but it makes the code a bit more confusing, left for legibility
+      // passed in a param containing an old ternary's value, legibility
       const {
         clientInfo,
         index,
@@ -156,6 +174,9 @@ class TransitionInput extends Component {
     };
 
     handleSetSelectValue = (newInfoHashString) => {
+      // created to break out several ternaries used to convert either this.props.value or a this.store value
+      // into a value for a select option dropdown, reusability and legibility
+      // passed in a param containing an old ternary's value, legibility
       const {
         clientInfo,
         name,
@@ -175,6 +196,9 @@ class TransitionInput extends Component {
     }
 
     handleSetSpanValue = (newInfoHashString) => {
+      // created to break out a complicated, nested ternary used to set the value of a span
+      // passed in a param containing an old ternary's value, legibility
+      // not a giant fan of single line if statements but they are pretty legible in this case
       const {
         boolean,
         dollar,
@@ -187,17 +211,26 @@ class TransitionInput extends Component {
       if (boolean) returnValue = this.handleSetSelectValue(newInfoHashString);
 
       if (index) returnValue = this.store[newInfoHashString][name][index - 1];
-      
+
       return returnValue;
     }
 
     handleSetState = (key, value) => {
+      // created to have a function that sets state for parent to pass through to child components
       this.setState({
         [key]: value,
       });
     }
 
     saveEdit = (removeBtn) => {
+      // destructuring for improved legibility
+      // change out of habit from using eslint,
+      // enclosed function params in parens because arrow function isn't implicit return, implied lint error fix
+      // there are a few minor things that could be refactoreed but that doesn't really solve anything
+      // nested ifs and else if could be changed but it doesn't really improve on legibility at all
+      // two setState calls aren't ideal and it could be one call with only the values being determined by conditional
+      // but that is incredibly minor,
+      // if more than two I would 100% refactor to having conditional values passed to one setState
       const {
         clientInfo,
         name,
@@ -217,7 +250,7 @@ class TransitionInput extends Component {
       } else if (!transactionInfo.approved) {
         if (name.includes('advised_salary')) {
           const newName = Math.round(transactionInfo[name] / 1000) * 1000;
-          transactionInfo[name] = newName;
+          this.store.transactionInfo[name] = newName;
           getTransitionPlanPotentialSavings();
         }
         updateTransactionInfo(transactionClientId);
@@ -236,6 +269,7 @@ class TransitionInput extends Component {
     };
 
     setHoverTrue = () => {
+      // destructuring for improved legibility
       const { clientInfo } = this.props;
       const { transactionInfo } = this.store;
 
@@ -247,6 +281,12 @@ class TransitionInput extends Component {
     };
 
     render() {
+      // destructuring for improved legibility
+      // created a const for newInfoHashString that replaces a ternary used multiple times
+      // this const is passed into other class methods from here so that if it ever needs
+      // to be changed a dev only needs change it once inside render and not multiple times inside each method, reusability and legibility
+      // created a const for valueBasedOnIndex that replaces a ternary used twice in the DefaultComponent, reusability and legibility
+      // broke out each section of jsx that was being rendered by ternary into components, legibility
       const {
         boolean,
         clientInfo,
