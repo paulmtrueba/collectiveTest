@@ -1,3 +1,5 @@
+github: https://github.com/paulmtrueba/collectiveTest
+
 In summary and to answer the questions posed for this exercise I think that my main goal,
 upon seeing the container code and beginning to dig into the functionality, was primarily to improve
 legibility. I think that clearly legible code will always be easier to refactor and bugfix and the time
