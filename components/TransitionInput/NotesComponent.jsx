@@ -41,14 +41,14 @@ const NotesComponent = ({
 
 {
   const {
-    boolean,
+    bool,
     func,
     shape,
     string,
   } = PropTypes;
 
   NotesComponent.propTypes = {
-    hover: boolean.isRequired,
+    hover: bool.isRequired,
     name: string.isRequired,
     newInfoHashString: string.isRequired,
     transactionInfo: shape({}).isRequired,

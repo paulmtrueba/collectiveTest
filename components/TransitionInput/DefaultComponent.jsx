@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import ClickOutHandler from 'react-onclickout';
 import PlacesAutocomplete from 'react-places-autocomplete';
@@ -19,8 +19,9 @@ const DefaultComponent = ({
   dollar,
   edit,
   hover,
-  placeHolder,
+  placeholder,
   placesInput,
+  newInfoHashString,
   valueBasedOnIndex,
   cancelEdit,
   convertToBoolean,
@@ -62,14 +63,17 @@ const DefaultComponent = ({
                 {...getInputProps({placeholder: '', className: 'location-search-input'})}
               />
               <ul className="hyke-autocomplete__list">
-                {suggestions.map((suggestion, key) => (
-                  <li
-                    key={key}
-                    {...getSuggestionItemProps(suggestion, {suggestion.active ? 'is-active' : null})}
-                  >
-                    <span>{suggestion.description}</span>
-                  </li>
-                ))}
+                {suggestions.map((suggestion, key) => {
+                  const suggestionClassName = suggestion.active ? 'is-active' : null;
+                  return (
+                    <li
+                      key={key}
+                      {...getSuggestionItemProps(suggestion, { suggestionClassName })}
+                    >
+                      <span>{suggestion.description}</span>
+                    </li>
+                  )
+                })}
               </ul>
             </div>
           )}
@@ -109,18 +113,19 @@ const DefaultComponent = ({
 
 {
   const {
+    bool,
     func,
-    shape,
     string,
   } = PropTypes;
 
   DefaultComponent.propTypes = {
-    boolean: boolean.isRequired,
-    dollar: boolean.isRequired,
-    edit: boolean.isRequired,
-    hover: boolean.isRequired,
-    placeHolder: string.isRequired,
-    placesInput: boolean.isRequired,
+    boolean: bool.isRequired,
+    dollar: bool.isRequired,
+    edit: bool.isRequired,
+    hover: bool.isRequired,
+    placeholder: string.isRequired,
+    placesInput: bool.isRequired,
+    newInfoHashString: string.isRequired,
     valueBasedOnIndex: string.isRequired,
     cancelEdit: func.isRequired,
     convertToBoolean: func.isRequired,

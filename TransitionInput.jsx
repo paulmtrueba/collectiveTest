@@ -2,9 +2,9 @@ import React, { Component, Fragment } from 'react';
 import { observer, inject } from 'mobx-react';
 import { geocodeByAddress } from 'react-places-autocomplete';
 
-import { NotesComponent } from './components/TransitionInput/NotesComponent';
-import { LinkComponent } from './components/TransitionInput/LinkComponent';
-import { DefaultComponent } from './components/TransitionInput/DefaultComponent';
+import NotesComponent from './components/TransitionInput/NotesComponent';
+import LinkComponent from './components/TransitionInput/LinkComponent';
+import DefaultComponent from './components/TransitionInput/DefaultComponent';
 
 // broke names array out as global to make saveEdit function more readable, legibility
 const namesArray = [
@@ -35,6 +35,14 @@ class TransitionInput extends Component {
     constructor(props) {
       super(props);
       this.store = props.OnboardHykeStore;
+      // used to try to mock store for testing
+      // this.store = {
+      //   transactionClientId: '',
+      //   transactionInfo: {},
+      //   getTransitionPlanPotentialSavings: () => {},
+      //   updateClientInfo: () => {},
+      //   updateTransactionInfo: {},
+      // }
       //formatting for legibility
       this.state = {
         edit: false,
@@ -296,8 +304,8 @@ class TransitionInput extends Component {
         link,
         name,
         notes,
+        placeholder,
         placesInput,
-        value,
       } = this.props;
       const { transactionInfo } = this.store;
       const {
@@ -308,7 +316,7 @@ class TransitionInput extends Component {
       const newInfoHashString = clientInfo ? 'transitionClientInfo' : 'transactionInfo';
       const valueBasedOnIndex = index
         ? this.store[newInfoHashString][name][index - 1]
-        : this.store[newInfoHashString][name];
+        : this.store[newInfoHashString][name] || '';
 
       return (
         <Fragment>
@@ -336,8 +344,9 @@ class TransitionInput extends Component {
               dollar={dollar}
               edit={edit}
               hover={hover}
-              placeHolder={placeholder}
+              placeholder={placeholder}
               placesInput={placesInput}
+              newInfoHashString={newInfoHashString}
               valueBasedOnIndex={valueBasedOnIndex}
               cancelEdit={this.cancelEdit}
               convertToBoolean={this.convertToBoolean}

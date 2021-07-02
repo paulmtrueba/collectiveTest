@@ -1,9 +1,9 @@
 import React from 'react';
-import configureMockStore from 'redux-mock-store';
-import { shallow, mount, render } from 'enzyme';
-import { LinkComponent } from '../FormModal';
-import sleep from '../../../__mocks__/sleep';
+import Adapter from 'enzyme-adapter-react-16';
+import { shallow, configure } from 'enzyme';
+import LinkComponent from '../LinkComponent';
 
+configure({adapter: new Adapter()});
 const getMockedProps = () => ({
   name: '',
   transactionInfo: {},
@@ -32,7 +32,7 @@ describe('<LinkComponent />', () => {
 
   it('renders one link with text defined by props.transactionInfo', () => {
     mockedProps.name = 'test';
-    mockdeProps.transactionInfo.test = 'linkTest';
+    mockedProps.transactionInfo.test = 'linkTest';
     wrapper = shallow(<LinkComponent { ...mockedProps }/>);
     expect(wrapper.find('a')).toHaveLength(1);
     expect(wrapper.find('a').text()).toEqual('linkTest');

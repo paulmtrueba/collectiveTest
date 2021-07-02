@@ -1,16 +1,17 @@
 import React from 'react';
-import configureMockStore from 'redux-mock-store';
-import { shallow, mount, render } from 'enzyme';
-import { DefaultComponent } from '../FormModal';
-import sleep from '../../../__mocks__/sleep';
+import Adapter from 'enzyme-adapter-react-16';
+import { shallow, configure } from 'enzyme';
+import DefaultComponent from '../DefaultComponent';
 
+configure({adapter: new Adapter()});
 const getMockedProps = () => ({
   boolean: false,
   dollar: false,
   edit: false,
   hover: false,
-  placeHolder: '',
+  placeholder: '',
   placesInput: false,
+  newInfoHashString: '',
   valueBasedOnIndex: '',
   cancelEdit: jest.fn(),
   convertToBoolean: jest.fn(),
@@ -42,7 +43,7 @@ describe('<DefaultComponent />', () => {
   it('renders one ClickOutHandler when edit', () => {
     mockedProps.edit = true;
     wrapper = shallow(<DefaultComponent { ...mockedProps }/>);
-    expect(wrapper.find('ClickOutHandler')).toHaveLength(1);
+    expect(wrapper.find('ClickOutComponent')).toHaveLength(1);
   });
 
   it('doesn\'t renders ClickOutHandler when edit === false', () => {
@@ -51,14 +52,14 @@ describe('<DefaultComponent />', () => {
   });
 
   it('renders one select element when edit and boolean', () => {
-    mockdeProps.boolean = true;
+    mockedProps.boolean = true;
     mockedProps.edit = true;
     wrapper = shallow(<DefaultComponent { ...mockedProps }/>);
     expect(wrapper.find('select')).toHaveLength(1);
   });
 
   it('renders one PlacesAutocomplete when edit and boolean === false and placesInput', () => {
-    mockdeProps.boolean = false;
+    mockedProps.boolean = false;
     mockedProps.edit = true;
     mockedProps.placesInput = true;
     wrapper = shallow(<DefaultComponent { ...mockedProps }/>);
@@ -66,7 +67,7 @@ describe('<DefaultComponent />', () => {
   });
 
   it('renders one input element when edit and boolean === false and placesInput === false', () => {
-    mockdeProps.boolean = false;
+    mockedProps.boolean = false;
     mockedProps.edit = true;
     mockedProps.placesInput = false;
     wrapper = shallow(<DefaultComponent { ...mockedProps }/>);

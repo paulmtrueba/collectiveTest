@@ -1,11 +1,11 @@
 import React from 'react';
-import configureMockStore from 'redux-mock-store';
-import { shallow, mount, render } from 'enzyme';
-import { NotesComponent } from '../FormModal';
-import sleep from '../../../__mocks__/sleep';
+import Adapter from 'enzyme-adapter-react-16';
+import { shallow, configure } from 'enzyme';
+import NotesComponent from '../NotesComponent';
 
+configure({adapter: new Adapter()});
 const getMockedProps = () => ({
-  hover: false,,
+  hover: false,
   name: '',
   newInfoHashString: '',
   transactionInfo: {},
@@ -40,7 +40,7 @@ describe('<NotesComponent />', () => {
   });
 
   it('renders one save div if hover', () => {
-    mockdeProps.hover = true;
+    mockedProps.hover = true;
     wrapper = shallow(<NotesComponent { ...mockedProps }/>);
     expect(wrapper.find('.transition-edit').text()).toEqual('Save');
   });
