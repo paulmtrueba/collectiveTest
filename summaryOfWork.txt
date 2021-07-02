@@ -1,0 +1,52 @@
+In summary and to answer the questions posed for this exercise I think that my main goal,
+upon seeing the container code and beginning to dig into the functionality, was primarily to improve
+legibility. I think that clearly legible code will always be easier to refactor and bugfix and the time
+invested towards that goal will pay off in dividends throughout the life of the application. Both new and
+experienced devs will have a much easier time getting up to speed and being able to quickly target issues
+if they can devote their entire attentions towards accomplishing those tasks and not having to worry
+about keeping track of micomanaging jsx logic or remembering what an ill named variable or function is
+used for.
+
+My first step was to go through all of the class methods and destructure variables and reformat them down
+to single tab spacing to make everything easier to read and give myself a good jumping off point for
+beginning to track down elements in the code that would need refactoring or enhancing.
+
+I think that ternaries, while useful in certain cases, can be overused and that overuse can lead to some
+very confusing code. I attempted to locate instances where ternaries were not entirely necessary or had
+been overused or duplicated and either simplified those down to let declarations with a single if statement
+or created variables that could hold values derived from ternary operations and be passed through to other
+methods to cut back on duplication.
+
+The bulk of the jsx in the render contained several ternaries that were making it difficult to keep
+track of which elements were nested within which parents and what would be rendered when certain booleans
+were tripped to true. The jsx contained three main ternaries at the top level so I broke the contents
+of those into three new components which should make bug fixing within the container much easier in the
+future.
+
+Several event handler properties within elements were setup to pass through an instance of the method
+that they wanted to call which, I believe, will just call that method immediately when the element is created
+and not when the event is fired off so those were all updated to use arrow functions.
+
+There were some issues with unknown context and some vague use cases where code was left as-is
+but cleaned up. These issues primarily related to the values in store which I am not familiar with using
+in the same context that this container is. I haven't used mobx before, I did a basic dive to familiarize
+myself for this test but did not get very far into topical applications of my tutorial for this code test.
+
+I ended up writing a fair amount of unit tests and think that I got decent coverage for the time frame
+allotted. I was able to run a large majority fo them in terminal but unfamiliarity with mobx also prevented
+me from fully implementing the full suite of tests that I had prepared due to lacking the ability to
+modify and compare against store within the tests.
+
+I was able to get everything running within a new react app but was unable to render out the jsx elements
+due to, once again, my unfamiliarity with mobx and setting up a a store that would work within the context
+of the container.
+
+In the end I think that I got good coverage for unit testing, quite poor smoke testing due to not
+getting the elements to render out and the state of the code seems to be in a much cleaner and workable
+iteration that, I believe, I could have used as a good foundation for continued work into familiarizing
+myself with mobx and wrapping up the last few pieces that need testing and refactoring attention.
+
+Overall this was also a very enjoyable code test. I very much appreciated this approach and it was quite
+fun getting to dive into some new code and figure out what it does and how it can be improved within the
+scope of that understanding while trying to leave most overall functionality refactored but functionally
+stable.
